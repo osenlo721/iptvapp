@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IPTV App</string>
+    <string name="home">Inicio</string>
+    <string name="search">Buscar</string>
+    <string name="favorites">Favoritos</string>
+    <string name="settings">Ajustes</string>
+    <string name="all_categories">Todos</string>
+    <string name="movies">Películas</string>
+    <string name="sports">Deportes</string>
+    <string name="series">Series</string>
+    <string name="live">En vivo</string>
+    <string name="load_m3u">Cargar lista M3U</string>
+    <string name="enter_url">Ingresa la URL de la lista M3U</string>
+    <string name="loading">Cargando…</string>
+    <string name="no_channels">No hay canales disponibles.\nCarga una lista M3U desde Ajustes.</string>
+    <string name="no_favorites">Aún no tienes favoritos.\nToca el ★ en cualquier canal.</string>
+    <string name="no_results">Sin resultados para "%1$s"</string>
+    <string name="channels_loaded">%1$d canales cargados</string>
+    <string name="error_loading">Error al cargar: %1$s</string>
+</resources>
