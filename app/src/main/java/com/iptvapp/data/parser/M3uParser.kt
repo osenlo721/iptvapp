@@ -71,11 +71,7 @@ object M3uParser {
         group.contains("serie", true) || group.contains("show", true) ||
         group.contains("telenovela", true) || group.contains("anime", true) -> "Series"
 
-        group.contains("live", true) || group.contains("vivo", true) ||
-        group.contains("news", true) || group.contains("noticia", true) ||
-        group.contains("24h", true) -> "En vivo"
-
-        else -> group.takeIf { it.isNotBlank() } ?: "Otros"
+        else -> "En Vivo"
     }
 
     private fun detectType(url: String): StreamType = when {

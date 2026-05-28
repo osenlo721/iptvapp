@@ -28,12 +28,10 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        val KEY_DEFAULTS_LOADED = booleanPreferencesKey("defaults_loaded")
+        val KEY_DEFAULTS_LOADED = booleanPreferencesKey("defaults_v2_loaded")
         val DEFAULT_SOURCES = listOf(
-            "https://iptv-org.github.io/iptv/categories/movies.m3u",
-            "https://iptv-org.github.io/iptv/categories/series.m3u",
-            "https://iptv-org.github.io/iptv/categories/sports.m3u",
-            "https://iptv-org.github.io/iptv/index.m3u"
+            "https://iptv-org.github.io/iptv/countries/co.m3u",
+            "https://iptv-org.github.io/iptv/languages/spa.m3u"
         )
     }
 
