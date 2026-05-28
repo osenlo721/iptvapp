@@ -39,6 +39,24 @@ class ChannelRepository @Inject constructor(
         }
     }
 
+    suspend fun loadFromUrls(urls: List<String>): Result<Int> = withContext(Dispatchers.IO) {
+        runCatching {
+            dao.deleteAllChannels()
+            var total = 0
+            for (url in urls) {
+                val req = Request.Builder().url(url).build()
+                val body = http.newCall(req).execute().use { it.body?.string() } ?: continue
+                val channels = M3uParser.parse(body)
+                if (channels.isNotEmpty()) {
+                    dao.insertChannels(channels)
+                    total += channels.size
+                }
+            }
+            if (total == 0) error("No se encontraron canales en ninguna lista")
+            total
+        }
+    }
+
     suspend fun loadFromContent(content: String): Result<Int> = withContext(Dispatchers.IO) {
         runCatching {
             val channels = M3uParser.parse(content)

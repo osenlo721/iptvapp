@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.iptvapp.ui.screens.home.HomeViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iptvapp.data.repository.ChannelRepository
@@ -62,7 +63,10 @@ class SettingsViewModel @Inject constructor(
     fun clearData() {
         viewModelScope.launch {
             repo.clearAll()
-            prefs.edit { it.remove(KEY_M3U_URL) }
+            prefs.edit {
+                it.remove(KEY_M3U_URL)
+                it.remove(HomeViewModel.KEY_DEFAULTS_LOADED)
+            }
             _state.update { it.copy(snackbar = "Datos borrados") }
         }
     }

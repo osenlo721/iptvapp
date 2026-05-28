@@ -1,5 +1,9 @@
 package com.iptvapp.ui.screens.home
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iptvapp.data.model.Channel
@@ -19,8 +23,19 @@ data class HomeState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repo: ChannelRepository
+    private val repo: ChannelRepository,
+    private val prefs: DataStore<Preferences>
 ) : ViewModel() {
+
+    companion object {
+        val KEY_DEFAULTS_LOADED = booleanPreferencesKey("defaults_loaded")
+        val DEFAULT_SOURCES = listOf(
+            "https://iptv-org.github.io/iptv/categories/movies.m3u",
+            "https://iptv-org.github.io/iptv/categories/series.m3u",
+            "https://iptv-org.github.io/iptv/categories/sports.m3u",
+            "https://iptv-org.github.io/iptv/index.m3u"
+        )
+    }
 
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
@@ -38,6 +53,25 @@ class HomeViewModel @Inject constructor(
             repo.getAllCategories().collect { cats ->
                 _state.update { it.copy(categories = listOf("Todos") + cats) }
             }
+        }
+        viewModelScope.launch {
+            val alreadyLoaded = prefs.data.map { it[KEY_DEFAULTS_LOADED] ?: false }.first()
+            if (!alreadyLoaded) loadDefaultSources()
+        }
+    }
+
+    private fun loadDefaultSources() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, snackbar = "Cargando canales...") }
+            repo.loadFromUrls(DEFAULT_SOURCES).fold(
+                onSuccess = { count ->
+                    prefs.edit { it[KEY_DEFAULTS_LOADED] = true }
+                    _state.update { it.copy(isLoading = false, snackbar = "$count canales cargados") }
+                },
+                onFailure = { e ->
+                    _state.update { it.copy(isLoading = false, snackbar = "Error: ${e.message}") }
+                }
+            )
         }
     }
 
